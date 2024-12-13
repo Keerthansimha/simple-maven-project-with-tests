@@ -94,6 +94,18 @@ pipeline {
                 }
             }
         }
+        stage('Deploy') {
+            steps {
+                script {
+                    if (isUnix()) {
+                        sh 'mvn deploy'
+                    } else {
+                        bat 'mvn deploy'
+                    }
+                }
+            }
+        }
+    }
 
     post {
         success {
