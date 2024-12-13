@@ -21,12 +21,21 @@ pipeline {
                 script {
                     // Automatically detect the OS and use the appropriate command
                     if (isUnix()) {
-                        sh 'mvn package'
+                        sh 'mvn -Dmaven.test.failure.ignore=true clean package'
                     } else {
-                        bat 'mvn package'
+                        bat 'mvn -Dmaven.test.failure.ignore=true clean package'
                     }
                 }
             }
+        }
+    }
+
+    post {
+        success {
+            // Record the test results
+            junit '**/target/surefire-reports/TEST-*.xml'
+            // Archive the jar file
+            archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
         }
     }
 }
