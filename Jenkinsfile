@@ -12,7 +12,7 @@ pipeline {
                 checkout([$class: 'GitSCM', 
                     branches: [[name: '*/main']], 
                     extensions: [], 
-                    userRemoteConfigs: [[credentialsId: 'github-access', url: 'https://github.com/Keerthansimha/java-jenkins.git']]
+                    userRemoteConfigs: [[credentialsId: 'github-access', url: 'https://github.com/Keerthansimha/simple-maven-project-with-tests.git']]
                 ])
             }
         }
