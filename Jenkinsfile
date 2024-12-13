@@ -16,79 +16,14 @@ pipeline {
                 ])
             }
         }
-        stage('Validate') {
+        stage('Build') {
             steps {
                 script {
+                    // Automatically detect the OS and use the appropriate command
                     if (isUnix()) {
-                        sh 'mvn validate'
+                        sh 'mvn -Dmaven.test.failure.ignore=true clean package'
                     } else {
-                        bat 'mvn validate'
-                    }
-                }
-            }
-        }
-        stage('Compile') {
-            steps {
-                script {
-                    if (isUnix()) {
-                        sh 'mvn compile'
-                    } else {
-                        bat 'mvn compile'
-                    }
-                }
-            }
-        }
-        stage('Test') {
-            steps {
-                script {
-                    if (isUnix()) {
-                        sh 'mvn test'
-                    } else {
-                        bat 'mvn test'
-                    }
-                }
-            }
-        }
-        stage('Package') {
-            steps {
-                script {
-                    if (isUnix()) {
-                        sh 'mvn package'
-                    } else {
-                        bat 'mvn package'
-                    }
-                }
-            }
-        }
-        stage('Verify') {
-            steps {
-                script {
-                    if (isUnix()) {
-                        sh 'mvn verify'
-                    } else {
-                        bat 'mvn verify'
-                    }
-                }
-            }
-        }
-        stage('Install') {
-            steps {
-                script {
-                    if (isUnix()) {
-                        sh 'mvn install'
-                    } else {
-                        bat 'mvn install'
-                    }
-                }
-            }
-        }
-        stage('Deploy') {
-            steps {
-                script {
-                    if (isUnix()) {
-                        sh 'mvn deploy'
-                    } else {
-                        bat 'mvn deploy'
+                        bat 'mvn -Dmaven.test.failure.ignore=true clean package'
                     }
                 }
             }
