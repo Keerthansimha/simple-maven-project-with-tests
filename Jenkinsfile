@@ -21,9 +21,9 @@ pipeline {
                 script {
                     // Automatically detect the OS and use the appropriate command
                     if (isUnix()) {
-                        sh 'mvn -Dmaven.test.failure.ignore=true clean package'
+                        sh 'mvn clean install' // Run the complete lifecycle, including tests
                     } else {
-                        bat 'mvn -Dmaven.test.failure.ignore=true clean package'
+                        bat 'mvn clean install' // Run the complete lifecycle, including tests
                     }
                 }
             }
@@ -32,10 +32,14 @@ pipeline {
 
     post {
         success {
-            // Record the test results
+            // Record the test results if the build is successful
             junit '**/target/surefire-reports/TEST-*.xml'
-            // Archive the jar file
+            // Archive the jar file as an artifact
             archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+        }
+        failure {
+            // Handle failure case (e.g., notify or fail the build in a specific way)
+            echo 'Build or tests failed!'
         }
     }
 }
