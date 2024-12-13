@@ -49,18 +49,6 @@ pipeline {
                 }
             }
         }
-        stage('Build') {
-            steps {
-                script {
-                    // Automatically detect the OS and use the appropriate command
-                    if (isUnix()) {
-                        sh 'mvn -Dmaven.test.failure.ignore=true clean package'
-                    } else {
-                        bat 'mvn -Dmaven.test.failure.ignore=true clean package'
-                    }
-                }
-            }
-        }
         stage('Package') {
             steps {
                 script {
