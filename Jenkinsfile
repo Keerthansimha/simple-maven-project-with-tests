@@ -1,9 +1,32 @@
-podTemplate(containers: [containerTemplate(name: 'maven', image: 'maven', command: 'sleep', args: 'infinity')]) {
-  node(POD_LABEL) {
-    checkout scm
-    container('maven') {
-      sh 'mvn -B -ntp -Dmaven.test.failure.ignore verify'
+pipeline {
+    agent any
+
+    tools {
+        maven 'maven'
+        jdk 'java'
     }
-    junit '**/target/surefire-reports/TEST-*.xml'
-  }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout([$class: 'GitSCM', 
+                    branches: [[name: '*/main']], 
+                    extensions: [], 
+                    userRemoteConfigs: [[credentialsId: 'github-access', url: 'https://github.com/Keerthansimha/java-jenkins.git']]
+                ])
+            }
+        }
+        stage('Build') {
+            steps {
+                script {
+                    // Automatically detect the OS and use the appropriate command
+                    if (isUnix()) {
+                        sh 'mvn package'
+                    } else {
+                        bat 'mvn package'
+                    }
+                }
+            }
+        }
+    }
 }
